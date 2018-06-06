@@ -17,7 +17,8 @@
 <script>
     import "milligram";
     import LoginForm from "./LoginForm";
-    import MeetingsPage from "./meetings/MeetingsPage";
+    import MeetingsPage from "./meetings/MeetingsPage"
+    import Vue from "vue";
 
     export default {
         components: {LoginForm, MeetingsPage},
@@ -27,13 +28,26 @@
             };
         },
         mounted() {
-            this.$http.post('login', {login: 'tester', password: 'aaa'});
+            if (localStorage.getItem('token')) {
+                this.auth = localStorage.getItem('username');
+                Vue.http.headers.common.Authorization = 'Bearer ' + token;
+            }
         },
         methods: {
             enter(user) {
-                this.auth = user;
+                this.$http.post('tokens', user).then(response => {
+                    if (response.status === 200) {
+                        this.auth = user.login;
+                        const token = response.body.token;
+                        Vue.http.headers.common.Authorization = 'Bearer ' + token;
+                        localStorage.setItem('token', token);
+                        localStorage.setItem('username', user.login);
+                        this.$http.get('participants');
+                    }
+                });
             },
             logout() {
+                localStorage.clear();
                 this.auth = '';
             }
         }
