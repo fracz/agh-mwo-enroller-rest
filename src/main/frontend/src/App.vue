@@ -27,9 +27,7 @@
             };
         },
         mounted() {
-          this.$http.get('participants').then(r => {
-              console.log(r);
-          });
+            this.$http.post('login', {login: 'tester', password: 'aaa'});
         },
         methods: {
             enter(user) {

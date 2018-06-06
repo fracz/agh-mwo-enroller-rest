@@ -3,12 +3,13 @@ package com.company.enroller.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "participant")
-public class Participant {
+public class Participant implements Serializable {
 
     @Id
     private String login;
